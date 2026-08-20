@@ -1,0 +1,6 @@
+@BuberDinner.Presentation_HostAddress = http://localhost:8080
+
+GET {{BuberDinner.Presentation_HostAddress}}/
+Accept: application/json
+
+###

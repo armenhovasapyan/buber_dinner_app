@@ -1,0 +1,20 @@
+{
+  "name": "Buber Dinner app",
+  "image": "mcr.microsoft.com/dotnet/sdk:10.0", // Automatically pulls latest .NET 8/9 SDK
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csdevkit",     // Essential for managing multi-project solutions
+        "ms-dotnettools.csharp",       // Base C# language support
+        "jmrog.vscode-nuget-package-manager" // Quick NuGet package installer
+      ]
+    }
+  },
+  "forwardPorts": [8080],
+  "postCreateCommand": "bash .devcontainer/setup-projects.sh",
+  "postStartCommand": "dotnet tool install --global dotnet-ef || true",
+  "containerEnv": {
+    "ASPNETCORE_ENVIRONMENT": "Development",
+    "PATH": "/root/.dotnet/tools:${env:PATH}"
+  }
+}
