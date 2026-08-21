@@ -9,6 +9,11 @@
             "type": "dotnet",
             "request": "launch",
             "projectPath": "${workspaceFolder}/BuberDinner.Presentation/BuberDinner.Presentation.csproj"
+        },
+        {
+            "name": ".Net Core Attach",
+            "type": "coreclr",
+            "request": "attach"
         }
     ]
 }

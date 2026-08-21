@@ -5,8 +5,10 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 {
-    builder.Services.AddApplication();
-    builder.Services.AddInfrastructure();
+    builder.Services
+        .AddApplication()
+        .AddInfrastructure(builder.Configuration);
+
     builder.Services.AddControllers();
     builder.Services.AddOpenApi();
 }
