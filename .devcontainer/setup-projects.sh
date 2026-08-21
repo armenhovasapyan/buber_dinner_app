@@ -15,7 +15,7 @@ if [ ! -f "BuberDinner.slnx" ]; then
 
   dotnet new sln -n BuberDinner
 
-  dotnet new webapi -o BuberDinner.Presentation
+  dotnet new webapi -o BuberDinner.Presentation --use-controllers
   dotnet new classlib -o BuberDinner.Contracts
   dotnet new classlib -o BuberDinner.Infrastructure
   dotnet new classlib -o BuberDinner.Application
