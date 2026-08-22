@@ -1,4 +1,4 @@
-using BuberDinner.Presentation.Http;
+using BuberDinner.Presentation.Common.Http;
 
 using ErrorOr;
 

@@ -1,24 +1,18 @@
-using BuberDinner.Presentation.Http;
-
-using ErrorOr;
+using BuberDinner.Presentation.Common.Errors;
+using BuberDinner.Presentation.Common.Mappings;
 
 namespace BuberDinner.Presentation;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddCustomProblemDetails(this IServiceCollection services)
+    public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
-        services.AddProblemDetails(options =>
-            // Customize default behavior for all responses
-            options.CustomizeProblemDetails = context =>
-            {
-                // Add a custom property to the Extensions dictionary
-                if (context.HttpContext.Items[HttpContextItemKeys.Errors] is List<Error> errors)
-                {
-                    context.ProblemDetails.Extensions["errorCodes"] = errors.Select(e => e.Code);
-                }
-            }
-        );
+        services.AddControllers();
+        services.AddOpenApi();
+
+        services
+        .AddCustomProblemDetails()
+        .AddMappings();
 
         return services;
     }

@@ -7,13 +7,9 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services
+        .AddPresentation()
         .AddApplication()
-        .AddInfrastructure(builder.Configuration)
-        .AddCustomProblemDetails();
-
-    builder.Services.AddControllers();
-
-    builder.Services.AddOpenApi();
+        .AddInfrastructure(builder.Configuration);
 }
 
 

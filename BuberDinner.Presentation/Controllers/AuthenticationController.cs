@@ -6,6 +6,8 @@ using BuberDinner.Domain.Common.Errors;
 
 using ErrorOr;
 
+using MapsterMapper;
+
 using MediatR;
 
 using Microsoft.AspNetCore.Http;
@@ -14,15 +16,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace BuberDinner.Presentation.Controllers;
 
 [Route("auth")]
-public class AuthenticationController(ISender mediator) : ApiController
+public class AuthenticationController(ISender mediator, IMapper mapper) : ApiController
 
 {
     [Route("register")]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
-        ErrorOr<AuthenticationResult> result = await mediator.Send(new RegisterCommand(request.FirstName, request.LastName, request.Email, request.Password));
+        ErrorOr<AuthenticationResult> result = await mediator.Send(mapper.Map<RegisterCommand>(request));
         return result.Match(
-            result => Ok(MapAuthResult(result)),
+            result => Ok(mapper.Map<AuthenticationResponse>(result)),
             errors => Problem(errors)
         );
     }
@@ -30,7 +32,7 @@ public class AuthenticationController(ISender mediator) : ApiController
     [Route("login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
-        ErrorOr<AuthenticationResult> result = await mediator.Send(new LoginQuery(request.Email, request.Password));
+        ErrorOr<AuthenticationResult> result = await mediator.Send(mapper.Map<LoginQuery>(request));
         if (result.IsError && result.FirstError == Errors.Authentication.InvalidCredentials)
         {
             return Problem(
@@ -40,19 +42,8 @@ public class AuthenticationController(ISender mediator) : ApiController
         }
 
         return result.Match(
-            result => Ok(MapAuthResult(result)),
+            result => Ok(mapper.Map<AuthenticationResponse>(result)),
             errors => Problem(errors)
-        );
-    }
-
-    private static AuthenticationResponse MapAuthResult(AuthenticationResult result)
-    {
-        return new AuthenticationResponse(
-            result.User.Id,
-            result.User.FirstName,
-            result.User.LastName,
-            result.User.Email,
-            result.Token
         );
     }
 }
