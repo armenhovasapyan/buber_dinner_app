@@ -1,5 +1,8 @@
 using BuberDinner.Application.Services.Authentication;
 using BuberDinner.Contracts.Authentication;
+using BuberDinner.Domain.Common.Errors;
+
+using ErrorOr;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,34 +10,45 @@ using Microsoft.AspNetCore.Mvc;
 namespace BuberDinner.Presentation.Controllers;
 
 [Route("auth")]
-[ApiController]
-public class AuthenticationController(IAuthenticationService auth) : ControllerBase
+public class AuthenticationController(IAuthenticationService auth) : ApiController
+
 {
     [Route("register")]
     public IActionResult Register(RegisterRequest request)
     {
-        var result = auth.Register(request.FirstName, request.LastName, request.Email, request.Password);
-        var response = new AuthenticationResponse(
-            result.User.Id,
-            result.User.FirstName,
-            result.User.LastName,
-            result.User.Email,
-            result.Token
+        ErrorOr<AuthenticationResult> result = auth.Register(request.FirstName, request.LastName, request.Email, request.Password);
+        return result.Match(
+            result => Ok(MapAuthResult(result)),
+            errors => Problem(errors)
         );
-        return Ok(response);
     }
 
     [Route("login")]
     public IActionResult Login(LoginRequest request)
     {
-        var result = auth.Login(request.Email, request.Password);
-        var response = new AuthenticationResponse(
+        ErrorOr<AuthenticationResult> result = auth.Login(request.Email, request.Password);
+        if (result.IsError && result.FirstError == Errors.Authentication.InvalidCredentials)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status401Unauthorized,
+                title: result.FirstError.Description
+            );
+        }
+
+        return result.Match(
+            result => Ok(MapAuthResult(result)),
+            errors => Problem(errors)
+        );
+    }
+
+    private static AuthenticationResponse MapAuthResult(AuthenticationResult result)
+    {
+        return new AuthenticationResponse(
             result.User.Id,
             result.User.FirstName,
             result.User.LastName,
             result.User.Email,
             result.Token
         );
-        return Ok(response);
     }
 }
