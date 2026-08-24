@@ -8,5 +8,5 @@ namespace BuberDinner.Application.Authentication.Query.Login;
 
 public record LoginQuery(
     string Email,
-    string Paswword
+    string Password
 ) : IRequest<ErrorOr<AuthenticationResult>>;

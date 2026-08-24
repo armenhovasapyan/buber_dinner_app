@@ -24,7 +24,7 @@ public class LoginQueryHandler(
             return Errors.Authentication.InvalidCredentials;
         }
 
-        if (user.Password != query.Paswword)
+        if (user.Password != query.Password)
         {
             return Errors.Authentication.InvalidCredentials;
         }
