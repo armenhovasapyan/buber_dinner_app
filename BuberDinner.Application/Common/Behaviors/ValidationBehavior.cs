@@ -1,13 +1,8 @@
-using BuberDinner.Application.Authentication.Command.Register;
-using BuberDinner.Application.Authentication.Common;
-
 using ErrorOr;
 
 using FluentValidation;
 
 using MediatR;
-
-using Microsoft.AspNetCore.Identity.Data;
 
 namespace BuberDinner.Application.Common.Behaviors;
 
@@ -20,13 +15,13 @@ where TResponse : IErrorOr
     {
         if (validator is null)
         {
-            return await next();
+            return await next(cancellationToken);
         }
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (validationResult.IsValid)
         {
-            return await next();
+            return await next(cancellationToken);
         }
 
         var errors = validationResult.Errors

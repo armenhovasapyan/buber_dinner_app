@@ -10,16 +10,18 @@ using MapsterMapper;
 
 using MediatR;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BuberDinner.Presentation.Controllers;
 
 [Route("auth")]
+[AllowAnonymous]
 public class AuthenticationController(ISender mediator, IMapper mapper) : ApiController
 
 {
-    [Route("register")]
+    [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
         ErrorOr<AuthenticationResult> result = await mediator.Send(mapper.Map<RegisterCommand>(request));
@@ -29,7 +31,7 @@ public class AuthenticationController(ISender mediator, IMapper mapper) : ApiCon
         );
     }
 
-    [Route("login")]
+    [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
         ErrorOr<AuthenticationResult> result = await mediator.Send(mapper.Map<LoginQuery>(request));
