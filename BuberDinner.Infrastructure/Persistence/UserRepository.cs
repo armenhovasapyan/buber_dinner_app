@@ -5,7 +5,7 @@ namespace BuberDinner.Infrastructure.Persistence;
 
 public class UserRepository : IUserRepository
 {
-    private static readonly List<User> _users = new();
+    private static readonly List<User> _users = [];
 
     public void Add(User user)
     {

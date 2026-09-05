@@ -16,7 +16,7 @@ public class JwtTokenGenerator(IDateTimeProvider dateTimeProvider, IOptions<JwtS
     {
         var claims = new Dictionary<string, object>
         {
-            { JwtRegisteredClaimNames.Sub, user.Id.ToString() },
+            { JwtRegisteredClaimNames.Sub, user.Id.Value.ToString() },
             { JwtRegisteredClaimNames.GivenName, user.FirstName },
             { JwtRegisteredClaimNames.FamilyName, user.LastName },
             { JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString() },
